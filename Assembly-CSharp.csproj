@@ -56,7 +56,16 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Sphere.cs" />
+    <Compile Include="Assets\Import.cs" />
     <Compile Include="Assets\yes.cs" />
+    <Compile Include="Assets\SphereEnumSpatiale.cs" />
+    <Compile Include="Assets\Plan.cs" />
+    <Compile Include="Assets\onDrawGizmo.cs" />
+    <Compile Include="Assets\Cylindre.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\triceratops.off.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
