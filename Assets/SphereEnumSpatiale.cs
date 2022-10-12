@@ -7,42 +7,98 @@ public class SphereEnumSpatiale : MonoBehaviour
 {
     public Material mat;
 
-    public Vector3 centreSphere = new Vector3(0, 0, 0);
-
-    public float rayon;
-
-    public int profondeurCube = 2;
+    public int nbCubesArrete;
 
     private Vector3[] vertices;
 
     private Vector3[] cubeVertices;
 
+    
+    private struct Sphere
+    {
+        public float rayon;
+        public Vector3 centre;
+
+        public Sphere(float rayon, Vector3 centre)
+        {
+            this.rayon = rayon;
+            this.centre = centre;
+        }
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
-        int nbCubesArrete = (int)Pow(2, profondeurCube);
 
         int nbCubes = (int)Pow(nbCubesArrete, 3);
 
         
+        List< Sphere > spheres = new List<Sphere> ();
 
-        int cpt = 0;
-        for(int indexX = 0; indexX < nbCubesArrete; indexX++)
+        spheres.Add(new Sphere(5, new Vector3(10, 0, 0)));
+        spheres.Add(new Sphere(5, new Vector3(-10, 0, 0)));
+        spheres.Add(new Sphere(5, new Vector3(10, 10, 0)));
+
+        Vector3 pointMax = new Vector3(-int.MaxValue, -int.MaxValue, -int.MaxValue);
+        Vector3 pointMin = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+
+        foreach (Sphere sphere in spheres)
         {
-            for (int indexY = 0; indexY < nbCubesArrete; indexY++)
+            if (sphere.centre.x + sphere.rayon > pointMax.x)
+                pointMax.x = sphere.centre.x + sphere.rayon;
+            if (sphere.centre.y + sphere.rayon > pointMax.y)
+                pointMax.y = sphere.centre.y + sphere.rayon;
+            if (sphere.centre.z + sphere.rayon > pointMax.z)
+                pointMax.z = sphere.centre.z + sphere.rayon;
+            if (sphere.centre.x - sphere.rayon < pointMin.x)
+                pointMin.x = sphere.centre.x - sphere.rayon;
+            if (sphere.centre.y - sphere.rayon < pointMin.y)
+                pointMin.y = sphere.centre.y - sphere.rayon;
+            if (sphere.centre.z - sphere.rayon < pointMin.z)
+                pointMin.z = sphere.centre.z - sphere.rayon;
+        }
+
+        float distanceX = pointMax.x - pointMin.x;
+        float distanceY = pointMax.y - pointMin.y;
+        float distanceZ = pointMax.z - pointMin.z;
+
+        if (distanceX > distanceY && distanceX > distanceZ)
+        {
+            pointMax.y += distanceX - distanceY;
+            pointMax.z += distanceX - distanceZ;
+        }
+        else if(distanceY > distanceX && distanceY > distanceZ)
+        {
+            pointMax.x += distanceY - distanceX;
+            pointMax.z += distanceY - distanceZ;
+        } 
+        else if(distanceZ > distanceY && distanceZ > distanceX)
+        {
+            pointMax.x += distanceZ - distanceX;
+            pointMax.y += distanceZ - distanceY;
+        }
+
+        float distanceCube = pointMax.x - pointMin.x;
+
+        for (int indexX = -nbCubesArrete/2; indexX <= nbCubesArrete/2; indexX++)
+        {
+            for (int indexY = -nbCubesArrete/2; indexY <= nbCubesArrete/2; indexY++)
             {
-                for (int indexZ = 0; indexZ < nbCubesArrete; indexZ++)
+                for (int indexZ = -nbCubesArrete/2; indexZ <= nbCubesArrete/2; indexZ++)
                 {
-                    cpt++;
                     Vector3 centreCube = new Vector3(
-                        (indexX * rayon * 2)  / ((float)Pow(profondeurCube, 2)),
-                        (indexY * rayon * 2) / ((float)Pow(profondeurCube, 2)),
-                        (indexZ * rayon * 2) / ((float)Pow(profondeurCube, 2)));
-                    GameObject cube = CubeEnglo(centreCube, rayon/nbCubesArrete);
-                    //if (Abs(Vector3.Distance(centreCube, centreSphere)) > rayon) 
-                    //{
-                    //    cube.SetActive(false);
-                    //}
+                    (indexX * distanceCube / nbCubesArrete),
+                    (indexY * distanceCube / nbCubesArrete),
+                    (indexZ * distanceCube / nbCubesArrete));
+                        
+                    foreach(Sphere sphere in spheres)
+                    {
+                        if (!(Abs(Vector3.Distance(centreCube, sphere.centre)) > sphere.rayon))
+                        {
+                            GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2));
+                        }
+                    }
                 }
             }
         }
@@ -124,6 +180,8 @@ public class SphereEnumSpatiale : MonoBehaviour
 
         msh.vertices = cubeVertices;
         msh.triangles = trianglesCube;
+
+        cube.AddComponent<onDrawGizmo>();
 
         cube.GetComponent<MeshFilter>().mesh = msh;
         cube.GetComponent<MeshRenderer>().material = mat;
