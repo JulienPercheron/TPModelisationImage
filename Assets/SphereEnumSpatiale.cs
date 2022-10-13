@@ -9,11 +9,24 @@ public class SphereEnumSpatiale : MonoBehaviour
 
     public int nbCubesArrete;
 
+    public bool intersection = true;
+
     private Vector3[] vertices;
 
     private Vector3[] cubeVertices;
 
-    
+    private Vector3 pointMax;
+
+    private Vector3 pointMin;
+
+    float distanceCube;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(pointMax, 0.2f);
+        Gizmos.DrawSphere(pointMin, 0.2f);
+    }
+
     private struct Sphere
     {
         public float rayon;
@@ -37,11 +50,11 @@ public class SphereEnumSpatiale : MonoBehaviour
         List< Sphere > spheres = new List<Sphere> ();
 
         spheres.Add(new Sphere(5, new Vector3(10, 0, 0)));
-        spheres.Add(new Sphere(5, new Vector3(-10, 0, 0)));
-        spheres.Add(new Sphere(5, new Vector3(10, 10, 0)));
+        spheres.Add(new Sphere(5, new Vector3(5, 2, 5)));
+        spheres.Add(new Sphere(5, new Vector3(10, 5, 0)));
 
-        Vector3 pointMax = new Vector3(-int.MaxValue, -int.MaxValue, -int.MaxValue);
-        Vector3 pointMin = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+        pointMax = new Vector3(int.MinValue, int.MinValue, int.MinValue);
+        pointMin = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
 
         foreach (Sphere sphere in spheres)
         {
@@ -79,7 +92,7 @@ public class SphereEnumSpatiale : MonoBehaviour
             pointMax.y += distanceZ - distanceY;
         }
 
-        float distanceCube = pointMax.x - pointMin.x;
+        distanceCube = pointMax.x - pointMin.x;
 
         for (int indexX = -nbCubesArrete/2; indexX <= nbCubesArrete/2; indexX++)
         {
@@ -91,14 +104,34 @@ public class SphereEnumSpatiale : MonoBehaviour
                     (indexX * distanceCube / nbCubesArrete),
                     (indexY * distanceCube / nbCubesArrete),
                     (indexZ * distanceCube / nbCubesArrete));
-                        
-                    foreach(Sphere sphere in spheres)
+
+                    if (intersection)
                     {
-                        if (!(Abs(Vector3.Distance(centreCube, sphere.centre)) > sphere.rayon))
+                        bool inAllSpheres = true;
+                        foreach (Sphere sphere in spheres)
+                        {
+                            if ((Abs(Vector3.Distance(centreCube, sphere.centre -centreCube)) > sphere.rayon))
+                            {
+                                inAllSpheres = false;
+                            }
+                        }
+
+                        if (inAllSpheres)
                         {
                             GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2));
                         }
                     }
+                    else
+                    {
+                        foreach (Sphere sphere in spheres)
+                        {
+                            if (!(Abs(Vector3.Distance(centreCube, sphere.centre - centreCube)) > sphere.rayon))
+                            {
+                                GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2));
+                                break;
+                            }
+                        }
+                    }   
                 }
             }
         }
@@ -181,7 +214,7 @@ public class SphereEnumSpatiale : MonoBehaviour
         msh.vertices = cubeVertices;
         msh.triangles = trianglesCube;
 
-        cube.AddComponent<onDrawGizmo>();
+        //cube.AddComponent<onDrawGizmo>();
 
         cube.GetComponent<MeshFilter>().mesh = msh;
         cube.GetComponent<MeshRenderer>().material = mat;
