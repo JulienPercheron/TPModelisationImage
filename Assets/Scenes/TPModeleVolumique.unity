@@ -346,5 +346,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
-  nbCubesArrete: 90
-  intersection: 0
+  nbCubesArrete: 50
+  intersection: 1
