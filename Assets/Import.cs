@@ -11,6 +11,8 @@ public class Import : MonoBehaviour
     public bool correctObject = true;
     public int brokenCount;
 
+    private List<Vector3> normales = new List<Vector3>();
+
     private void Start()
     {
         if (correctObject)
@@ -150,6 +152,27 @@ public class Import : MonoBehaviour
                 triangles[compteur] = int.Parse(coords[1]);
                 triangles[compteur + 1] = int.Parse(coords[2]);
                 triangles[compteur + 2] = int.Parse(coords[3]);
+
+
+                //Calcul de la normale
+                Vector3 centre = Vector3.zero;
+                
+                centre.x = (vertices[int.Parse(coords[1])].x + vertices[int.Parse(coords[2])].x + vertices[int.Parse(coords[3])].x) / 3;
+                centre.y = (vertices[int.Parse(coords[1])].y + vertices[int.Parse(coords[2])].y + vertices[int.Parse(coords[3])].y) / 3;
+                centre.z = (vertices[int.Parse(coords[1])].z + vertices[int.Parse(coords[2])].z + vertices[int.Parse(coords[3])].z) / 3;
+
+                Vector3 normale = Vector3.zero;
+
+                Vector3 S1S2 = vertices[int.Parse(coords[2])] - vertices[int.Parse(coords[1])];
+                Vector3 S1S3 = vertices[int.Parse(coords[3])] - vertices[int.Parse(coords[1])];
+
+                normale = Vector3.Cross(S1S2, S1S3);
+
+                normale = centre + normale;
+
+                normales.Add(centre);
+                normales.Add(normale);
+
                 compteur += 3;
             }
         }
@@ -161,5 +184,22 @@ public class Import : MonoBehaviour
 
         gameObject.GetComponent<MeshFilter>().mesh = msh;
         gameObject.GetComponent<MeshRenderer>().material = mat;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        if (gameObject.GetComponent<MeshFilter>() != null)
+        {
+            if (normales != null)
+            {
+                for (int i = 0; i < normales.Count; i+=2)
+                {
+                    Gizmos.DrawLine(normales[i], normales[i + 1]);
+                }
+            }
+        }
+
     }
 }
