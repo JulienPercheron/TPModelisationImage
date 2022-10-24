@@ -65,6 +65,8 @@ public class Import : MonoBehaviour
             writer.WriteLine(coords);
         }
         writer.Close();
+
+        Debug.Log("Saved at : " + path);
     }
 
     private void BuildBrokenObject()
