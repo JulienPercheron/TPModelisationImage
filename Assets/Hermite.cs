@@ -5,24 +5,15 @@ using UnityEngine;
 public class Hermite : MonoBehaviour
 {
     private List<Vector3> listePoints = new List<Vector3>();
-    private List<Vector3> polynome = new List<Vector3>();
 
 
 
     void Start()
     {
-        //CalcHermite(Vector3.zero, new Vector3(2, 0, 0), new Vector3(8,8,0), new Vector3(8,-8,0));
-
-        Bezier();
+        CalcHermite(Vector3.zero, new Vector3(2, 0, 0), new Vector3(8,8,0), new Vector3(8,-8,0));
     }
 
-    void Bezier()
-    {
-        polynome.Add(new Vector3(-2,-2,0));
-        polynome.Add(new Vector3(-1, 1, 0));
-        polynome.Add(new Vector3(1, 1, 0));
-        polynome.Add(new Vector3(2, -2, 0));
-    }
+
 
     void CalcHermite(Vector3 p0, Vector3 p1, Vector3 v0, Vector3 v1)
     {
@@ -66,18 +57,6 @@ public class Hermite : MonoBehaviour
 
                 //Gizmos.DrawSphere(listePoints[listePoints.Count - 1], 0.1f);
                 //Gizmos.DrawLine(listePoints[listePoints.Count - 1], listePoints[0]);
-            }
-        }
-        if (polynome != null)
-        {
-            if (polynome.Count > 0)
-            {
-                Gizmos.color = Color.green;
-
-                for (int i = 0; i < polynome.Count - 1; i++)
-                {
-                    Gizmos.DrawLine(polynome[i], polynome[i + 1]);
-                }
             }
         }
     }

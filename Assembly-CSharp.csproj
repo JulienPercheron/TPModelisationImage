@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\importCollapse.cs" />
+    <Compile Include="Assets\Hermite.cs" />
     <Compile Include="Assets\Sphere.cs" />
     <Compile Include="Assets\Import.cs" />
     <Compile Include="Assets\yes.cs" />
@@ -65,7 +66,7 @@
     <Compile Include="Assets\PolylineChaikin.cs" />
     <Compile Include="Assets\onDrawGizmo.cs" />
     <Compile Include="Assets\Cylindre.cs" />
-    <Compile Include="Assets\Hermite.cs" />
+    <Compile Include="Assets\Bezier.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\triceratops.off.txt" />
