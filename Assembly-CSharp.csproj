@@ -64,10 +64,10 @@
     <Compile Include="Assets\Import.cs" />
     <Compile Include="Assets\Bezier.cs" />
     <Compile Include="Assets\yes.cs" />
+    <Compile Include="Assets\CubeSphere.cs" />
     <Compile Include="Assets\Plan.cs" />
     <Compile Include="Assets\onDrawGizmo.cs" />
     <Compile Include="Assets\PolylineChaikin.cs" />
-    <Compile Include="Assets\CubeSphere.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\triceratops.off.txt" />

@@ -123,18 +123,24 @@ public class SphereEnumSpatiale : MonoBehaviour
 
                         if (inAllSpheres)
                         {
-                            GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2));
+                            GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2), true);
                         }
                     }
                     else
                     {
+                        bool foundSphere = false;
                         foreach (Sphere sphere in spheres)
                         {
                             if (!(Abs(Vector3.Distance(centreCube, sphere.centre - centreCube)) > sphere.rayon))
                             {
-                                GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2));
+                                GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2), true);
+                                foundSphere = true;
                                 break;
                             }
+                        }
+                        if (!foundSphere)
+                        {
+                            GameObject cube = CubeEnglo(centreCube, distanceCube / (nbCubesArrete * 2), false);
                         }
                     }   
                 }
@@ -148,7 +154,7 @@ public class SphereEnumSpatiale : MonoBehaviour
         return new Vector3(Abs(input.x), Abs(input.y), Abs(input.z));
     }
 
-    GameObject CubeEnglo(Vector3 centre, float rayonCube)
+    GameObject CubeEnglo(Vector3 centre, float rayonCube, bool inSphere)
     {
         GameObject cube = new GameObject("cube");
         cube.AddComponent<MeshFilter>();
@@ -241,6 +247,9 @@ public class SphereEnumSpatiale : MonoBehaviour
 
         cube.GetComponent<MeshFilter>().mesh = msh;
         cube.GetComponent<MeshRenderer>().material = mat;
+        
+        cube.GetComponent<MeshRenderer>().enabled = inSphere;
+
         return cube;
     }
 }
