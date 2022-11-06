@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
 using static System.Math;
 
 public class SphereEnumSpatiale : MonoBehaviour
@@ -11,6 +12,8 @@ public class SphereEnumSpatiale : MonoBehaviour
 
     public bool intersection = true;
 
+    public GameObject eraser;
+
     private Vector3[] vertices;
 
     private Vector3[] cubeVertices;
@@ -20,6 +23,8 @@ public class SphereEnumSpatiale : MonoBehaviour
     private Vector3 pointMin;
 
     float distanceCube;
+
+
 
     private void OnDrawGizmos()
     {
@@ -49,9 +54,9 @@ public class SphereEnumSpatiale : MonoBehaviour
         
         List< Sphere > spheres = new List<Sphere> ();
 
-        spheres.Add(new Sphere(5, new Vector3(10, 0, 0)));
+        //spheres.Add(new Sphere(5, new Vector3(10, 0, 0)));
         spheres.Add(new Sphere(5, new Vector3(5, 2, 5)));
-        spheres.Add(new Sphere(5, new Vector3(10, 5, 0)));
+        //spheres.Add(new Sphere(5, new Vector3(10, 5, 0)));
 
         pointMax = new Vector3(int.MinValue, int.MinValue, int.MinValue);
         pointMin = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
@@ -137,11 +142,19 @@ public class SphereEnumSpatiale : MonoBehaviour
         }
     }
 
+
+    Vector3 AbsVector(Vector3 input)
+    {
+        return new Vector3(Abs(input.x), Abs(input.y), Abs(input.z));
+    }
+
     GameObject CubeEnglo(Vector3 centre, float rayonCube)
     {
         GameObject cube = new GameObject("cube");
         cube.AddComponent<MeshFilter>();
         cube.AddComponent<MeshRenderer>();
+        cube.AddComponent<BoxCollider>();
+        cube.AddComponent<CubeSphere>();
 
         cubeVertices = new Vector3[8];
         int[] trianglesCube = new int[36];
@@ -151,11 +164,15 @@ public class SphereEnumSpatiale : MonoBehaviour
         cubeVertices[2] = new Vector3(centre.x - rayonCube, centre.y - rayonCube, centre.z + rayonCube);
         cubeVertices[3] = new Vector3(centre.x + rayonCube, centre.y - rayonCube, centre.z + rayonCube);
 
-
         cubeVertices[4] = new Vector3(centre.x + rayonCube, centre.y + rayonCube, centre.z + rayonCube);
         cubeVertices[5] = new Vector3(centre.x - rayonCube, centre.y + rayonCube, centre.z + rayonCube);
         cubeVertices[6] = new Vector3(centre.x - rayonCube, centre.y + rayonCube, centre.z - rayonCube);
         cubeVertices[7] = new Vector3(centre.x + rayonCube, centre.y + rayonCube, centre.z - rayonCube);
+
+        
+        Vector3 longeur = AbsVector(cubeVertices[0] - cubeVertices[1]);
+        Vector3 profondeur = AbsVector(cubeVertices[3] - cubeVertices[1]);
+        Vector3 hauteur = AbsVector(cubeVertices[3] - cubeVertices[4]);
 
         trianglesCube[0] = 0;
         trianglesCube[1] = 2;
@@ -215,6 +232,12 @@ public class SphereEnumSpatiale : MonoBehaviour
         msh.triangles = trianglesCube;
 
         //cube.AddComponent<onDrawGizmo>();
+
+
+        cube.GetComponent<BoxCollider>().center = centre;
+        cube.GetComponent<BoxCollider>().size = new Vector3(longeur.magnitude, hauteur.magnitude, profondeur.magnitude);
+        cube.GetComponent<BoxCollider>().isTrigger = true;
+
 
         cube.GetComponent<MeshFilter>().mesh = msh;
         cube.GetComponent<MeshRenderer>().material = mat;

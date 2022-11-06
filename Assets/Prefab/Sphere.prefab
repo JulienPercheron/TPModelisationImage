@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6288704559170763676}
-  - component: {fileID: 6288704559170763677}
+  - component: {fileID: 8201829415308647706}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &6288704559170763677
+--- !u!114 &8201829415308647706
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,10 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6288704559170763678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c19f9f5a5724e743af5fa51c3e537d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 0f8c2ca7b7195544ab4db4dfabdc2ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mat: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
-  nbMeridiens: 8
-  nbParallele: 8
-  rayon: 2
+  mat: {fileID: 0}
+  nbMeridiens: 0
+  nbParallele: 0
+  rayon: 0
